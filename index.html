@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#2b1055" />
+<title>Happy Birthday!</title>
+<style>
+  :root {
+    --card-bg: rgba(255, 255, 255, 0.12);
+    --accent: #ffd166;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: #fff;
+    background: linear-gradient(160deg, #2b1055 0%, #7597de 55%, #ff8fb1 100%);
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    text-align: center;
+  }
+
+  /* Confetti sits behind the card but above the background */
+  #confetti {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .card {
+    position: relative;
+    z-index: 2;
+    width: min(560px, 100%);
+    padding: clamp(22px, 6vw, 44px) clamp(18px, 5vw, 38px);
+    border-radius: 24px;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(30px) scale(0.96); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .eyebrow {
+    margin: 0 0 6px;
+    font-size: clamp(0.8rem, 3.4vw, 1rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.1rem, 10vw, 3.6rem);
+    line-height: 1.05;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.3);
+  }
+
+  .name {
+    display: block;
+    margin-top: 8px;
+    color: var(--accent);
+    font-size: clamp(1.6rem, 8vw, 2.8rem);
+  }
+
+  .message {
+    margin: 18px auto 4px;
+    max-width: 42ch;
+    font-size: clamp(0.98rem, 4vw, 1.12rem);
+    line-height: 1.65;
+    opacity: 0.94;
+  }
+
+  /* ---------- Cake ---------- */
+  .cake {
+    --w: clamp(140px, 46vw, 200px);
+    width: var(--w);
+    margin: 26px auto 8px;
+    position: relative;
+  }
+
+  .layer {
+    height: calc(var(--w) * 0.22);
+    border-radius: 10px;
+    margin: 0 auto;
+    box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.12);
+  }
+  .layer.top    { width: 74%; background: #ffb3c6; }
+  .layer.middle { width: 88%; background: #ffe0ac; margin-top: 4px; }
+  .layer.bottom { width: 100%; background: #f78ca0; margin-top: 4px; }
+
+  .candles {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--w) * 0.11);
+    margin-bottom: 4px;
+  }
+
+  .candle {
+    position: relative;
+    width: calc(var(--w) * 0.055);
+    height: calc(var(--w) * 0.2);
+    border-radius: 3px;
+    background: repeating-linear-gradient(45deg, #fff 0 5px, #ff6b6b 5px 10px);
+  }
+
+  .flame {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--w) * -0.11);
+    width: calc(var(--w) * 0.06);
+    height: calc(var(--w) * 0.1);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: radial-gradient(circle at 50% 70%, #fff6b0, #ffb300 60%, #ff6a00);
+    box-shadow: 0 0 18px 6px rgba(255, 170, 0, 0.55);
+    transform: translateX(-50%);
+    transform-origin: bottom center;
+    animation: flicker 0.7s ease-in-out infinite alternate;
+  }
+
+  @keyframes flicker {
+    from { transform: translateX(-50%) scale(1) rotate(-3deg); opacity: 0.9; }
+    to   { transform: translateX(-50%) scale(1.14) rotate(3deg); opacity: 1; }
+  }
+
+  .cake.blown .flame {
+    animation: none;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.2);
+    transition: all 0.45s ease;
+  }
+
+  /* ---------- Button ---------- */
+  .btn {
+    margin-top: 20px;
+    padding: 14px 30px;
+    min-height: 48px;               /* comfortable touch target */
+    font: inherit;
+    font-weight: 700;
+    font-size: clamp(1rem, 4.2vw, 1.1rem);
+    color: #45146b;
+    background: var(--accent);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover  { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,0,0,0.3); }
+  .btn:active { transform: translateY(1px) scale(0.98); }
+  .btn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+  .hint {
+    margin: 14px 0 0;
+    font-size: 0.82rem;
+    opacity: 0.72;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<main class="card">
+  <p class="eyebrow">Happy Birthday</p>
+  <h1>Wishing you a wonderful day<span class="name" id="name">Alex!</span></h1>
+
+  <div class="cake" id="cake">
+    <div class="candles">
+      <div class="candle"><span class="flame"></span></div>
+      <div class="candle"><span class="flame"></span></div>
+      <div class="candle"><span class="flame"></span></div>
+    </div>
+    <div class="layer top"></div>
+    <div class="layer middle"></div>
+    <div class="layer bottom"></div>
+  </div>
+
+  <p class="message">
+    May this year bring you more laughter than you can handle, plans that
+    actually work out, and cake whenever you want it. So glad you were born.
+  </p>
+
+  <button class="btn" id="wishBtn">Make a wish 🎂</button>
+  <p class="hint">Tap anywhere for more confetti</p>
+</main>
+
+<script>
+(function () {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const COLORS = ['#ffd166', '#ef476f', '#06d6a0', '#118ab2', '#ffffff', '#ff9f1c', '#c77dff'];
+  let particles = [];
+  let W = 0, H = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  window.addEventListener('orientationchange', () => setTimeout(resize, 200));
+
+  // Fewer pieces on small screens keeps phones smooth
+  const isSmall = () => W < 620;
+
+  function makePiece(x, y, burst) {
+    const angle = Math.random() * Math.PI * 2;
+    const power = burst ? 4 + Math.random() * 8 : 0;
+    return {
+      x, y,
+      vx: burst ? Math.cos(angle) * power : (Math.random() - 0.5) * 1.4,
+      vy: burst ? Math.sin(angle) * power - 3 : 1.5 + Math.random() * 2.5,
+      size: 5 + Math.random() * 6,
+      color: COLORS[(Math.random() * COLORS.length) | 0],
+      rot: Math.random() * Math.PI,
+      spin: (Math.random() - 0.5) * 0.25,
+      wobble: Math.random() * Math.PI * 2,
+      life: 1
+    };
+  }
+
+  function burstAt(x, y, count) {
+    const n = count || (isSmall() ? 55 : 90);
+    for (let i = 0; i < n; i++) particles.push(makePiece(x, y, true));
+    cap();
+  }
+
+  function rain(count) {
+    for (let i = 0; i < count; i++) {
+      const p = makePiece(Math.random() * W, -20 - Math.random() * H * 0.5, false);
+      particles.push(p);
+    }
+    cap();
+  }
+
+  function cap() {
+    const max = isSmall() ? 220 : 400;
+    if (particles.length > max) particles.splice(0, particles.length - max);
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.wobble += 0.06;
+      p.vy += 0.09;                 // gravity
+      p.vx *= 0.995;                // drag
+      p.vy *= 0.995;
+      p.x += p.vx + Math.sin(p.wobble) * 0.7;
+      p.y += p.vy;
+      p.rot += p.spin;
+
+      if (p.y > H + 40 || p.x < -60 || p.x > W + 60) {
+        particles.splice(i, 1);
+        continue;
+      }
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      // squashing the height fakes a 3D flutter
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * Math.abs(Math.cos(p.wobble)) * 0.9 + 1);
+      ctx.restore();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  if (!reduceMotion) {
+    requestAnimationFrame(frame);
+    rain(isSmall() ? 40 : 70);
+    setTimeout(() => burstAt(W / 2, H * 0.45), 400);
+    setInterval(() => rain(isSmall() ? 2 : 4), 400);  // gentle ongoing drizzle
+  }
+
+  // Personalise via URL:  index.html?name=Sam
+  const param = new URLSearchParams(location.search).get('name');
+  if (param) document.getElementById('name').textContent = param.slice(0, 30) + '!';
+
+  // Interactions
+  const cake = document.getElementById('cake');
+
+  document.getElementById('wishBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    cake.classList.add('blown');
+    const r = cake.getBoundingClientRect();
+    burstAt(r.left + r.width / 2, r.top + r.height / 2, isSmall() ? 90 : 150);
+    setTimeout(() => cake.classList.remove('blown'), 2600);
+  });
+
+  document.addEventListener('pointerdown', (e) => {
+    if (!reduceMotion) burstAt(e.clientX, e.clientY, isSmall() ? 30 : 45);
+  });
+})();
+</script>
+</body>
+</html>
